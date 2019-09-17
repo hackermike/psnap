@@ -7,7 +7,7 @@ if __name__ == "__main__":
     # and reference your dateformat with %D.
     #   %Y=year, %m=month, %d=day, %H=hour, %M=minute, %S=second, etc.
     dateformat = None
-    # Can override is a daily timestamp is enough
+    # Can override if a daily timestamp is enough
     #dateformat = "%Y%m%d"
     st = state_tracker.StateTracker("results_%D.json", dateformat=dateformat)
     st.set("val1", 1)
