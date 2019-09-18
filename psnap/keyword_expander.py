@@ -74,6 +74,11 @@ class KeywordExpander:
         output_directory : str, optional
             Output directory for code_snap else default is to use same directory as code_src.
 
+        Raises
+        ------
+        RuntimeError
+            Issues RuntimeError if output of code_snap matches input code_src.
+
         Returns
         -------
         dict
@@ -89,6 +94,11 @@ class KeywordExpander:
             # Update path in outfile to use output_directory
             output_basename = os.path.basename(outfile)
             outfile = os.path.join(output_directory, output_basename)
+
+        infile_norm = os.path.normpath(infile)
+        outfile_norm = os.path.normpath(outfile)
+        if infile_norm == outfile_norm:
+            raise RuntimeError(f"Output file must not match input code_src: {infile}")
 
         with open(outfile, "w", encoding="utf-8") as fout:
             with open(infile, encoding="utf-8") as fin:
