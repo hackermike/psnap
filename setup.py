@@ -3,7 +3,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 setuptools.setup(
      name='psnap',  
-     version='0.2',
+     version='0.3',
      scripts=['scripts/psnap', 'scripts/psnap_example'] ,
      author="Michael Frandsen",
      author_email="wfrandsen@gmail.com",

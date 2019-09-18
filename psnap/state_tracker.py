@@ -3,6 +3,7 @@ import json
 import os.path
 import sys
 import time
+from psnap import keyword_expander
 
 class StateTracker:
     """
@@ -23,8 +24,10 @@ class StateTracker:
     -------
     set(key, value)
         Stores data[key] = value
-    save(filename=None)
+    save(filename)
         Save json output and metadata, defaulting to constructor filename
+    save_code_snap(output_directory):
+        Given current json, read code_src and write code_snap
     """
 
     # Top-level output dictionary contains ["data"] and ["psnap_meta"].
@@ -65,7 +68,10 @@ class StateTracker:
             # Note: Should pass value as arg for notebook, etc.
             code_src = sys.argv[0]
         if code_snap is None:
-            code_snap = os.path.splitext(code_src)[0] + f"_{self.ts_str}" + os.path.splitext(code_src)[1]
+            (code_basename, use_ext) = os.path.splitext(code_src)
+            if len(use_ext) == 0:
+                use_ext = ".py"
+            code_snap = code_basename + f"_{self.ts_str}" + use_ext
         self._hist[StateTracker._meta_key] = {
             "code_src": code_src,
             "code_snap": code_snap,
@@ -146,3 +152,19 @@ class StateTracker:
         with open(f"{filename}", "w", encoding="utf-8") as f:
             json.dump(self._hist, f)
         return filename
+
+    def save_code_snap(self, output_directory=None):
+        """
+        Given current json, read code_src and write code_snap.
+
+        Parameters
+        ----------
+        output_directory : str, optional
+            Output directory for code_snap else default is to use same directory as code_src.
+
+        Returns
+        -------
+        dict
+            Dictionary containing "code_src" and "code_snap".
+        """
+        return keyword_expander.KeywordExpander.expand_from_json(self._hist, output_directory=output_directory)

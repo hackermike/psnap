@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import sys
 from psnap import state_tracker
 
 if __name__ == "__main__":
@@ -13,7 +14,8 @@ if __name__ == "__main__":
     st.set("val1", 1)
     # $val1$
     st.set("val2", "number 2") # $val2$
-    output = st.save()
-    print(f"Saved history to: {output}")
-    print(f"Generate {st.code_snap} with:")
-    print(f"  psnap {output}")
+    json_output = st.save()
+    print(f"Saved history to: {json_output}")
+    output = st.save_code_snap(output_directory=".")
+    print(f"Saved code_snap to: {output['code_snap']}")
+    print(f"Check differences with: diff -u {sys.argv[0]} {output['code_snap']}")
