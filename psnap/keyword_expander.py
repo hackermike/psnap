@@ -94,6 +94,11 @@ class KeywordExpander:
         if infile_norm == outfile_norm:
             raise RuntimeError(f"Output file must not match input code_src: {infile}")
 
+        # See if output_directory exists or needs to be created
+        output_directory = os.path.dirname(outfile)
+        if len(output_directory) > 0 and not os.path.exists(output_directory):
+            os.makedirs(output_directory)
+
         with open(outfile, "w", encoding="utf-8") as fout:
             with open(infile, encoding="utf-8") as fin:
                 for line in fin:
