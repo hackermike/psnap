@@ -12,6 +12,7 @@ Inputs/outputs:
     output with keyword expansion ("code_snap").
 """
 
+import sys
 from psnap import keyword_expander
 
 def _psnap_main():
@@ -21,8 +22,8 @@ def _psnap_main():
 
     data = keyword_expander.KeywordExpander.expand_from_json_file(sys.argv[1])
 
-    print(f"INFILE: {data.code_src}")
-    print(f"WROTE: {data.code_snap}")
+    print(f"INFILE: {data['code_src']}")
+    print(f"WROTE: {data['code_snap']}")
 
 if __name__ == "__main__":
     _psnap_main()
