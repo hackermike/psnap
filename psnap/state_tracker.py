@@ -150,6 +150,12 @@ class StateTracker:
         else:
             # Allow expansion of any special vars
             filename = StateTracker._expand_filename(filename)
+
+        # See if output_directory exists or needs to be created
+        output_directory = os.path.dirname(filename)
+        if len(output_directory) > 0 and not os.path.exists(output_directory):
+            os.makedirs(output_directory)
+
         with open(f"{filename}", "w", encoding="utf-8") as f:
             # dotty_dict isn't json serializable to make object very similar
             # to _hist.
@@ -175,4 +181,6 @@ class StateTracker:
         dict
             Dictionary containing "code_src" and "code_snap".
         """
+        if output_directory is not None:
+            output_directory = self._expand_filename(output_directory)
         return keyword_expander.KeywordExpander.expand_from_json(self._hist, output_directory=output_directory)
