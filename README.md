@@ -7,4 +7,4 @@ The output json file can be processed by psnap to augment special
 keywords in the source with their saved values. Syntax is similar to
 svn keyword substitution: $varname: value $
 
-See psnap_example for example usage.
+See psnap_example for example usage and psnap_example2 for extensions.

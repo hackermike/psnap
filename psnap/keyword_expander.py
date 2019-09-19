@@ -17,9 +17,12 @@ class KeywordExpander:
         Given json input file, read code_src and write code_snap
     """
 
-    _var_expand_str = r'(?P<pre>.*[$])(?P<var>[a-zA-Z_][a-zA-Z_0-9.]*)(?P<col>:?:?)(?P<curval>.*)(?P<post>[$].*)'
+    # Note in this first case that {} are explicitly omitted and there is no <end_fmt>
+    _var_expand_str = r'(?P<pre>.*)[$](?P<inline>[!]?)(?P<var>[a-zA-Z_][a-zA-Z_0-9.]*)(?P<col>:?:?)(?P<curval>.*)[$](?P<post>.*)'
+    _var_expand_br_str = r'(?P<pre>.*)[$](?P<inline>[!]?)[{](?P<var>[a-zA-Z_][a-zA-Z_0-9.]*)(?P<end_fmt>:?[^:]*[}])(?P<col>:?:?)(?P<curval>.*)[$](?P<post>.*)'
 
     _var_expand_re = re.compile(_var_expand_str, re.S)
+    _var_expand_br_re = re.compile(_var_expand_br_str, re.S)
 
     @staticmethod
     def _lookup_var(str, data):
@@ -43,16 +46,35 @@ class KeywordExpander:
         # Search is for match anywhere on line
         # but we are matching to full line.
         #match = KeywordExpander._var_expand_re.search(line)
-        match = KeywordExpander._var_expand_re.match(line)
+        # Try to match braces first but fallback if not found
+        match = KeywordExpander._var_expand_br_re.match(line)
+        if match is None:
+            match = KeywordExpander._var_expand_re.match(line)
 
         if match is not None:
             d = match.groupdict()
             val = KeywordExpander._lookup_var(d['var'], data)
+            fmt = ""
+            ob = ""
+            end_fmt = ""
+            if 'end_fmt' in d and d['end_fmt'] is not None:
+                ob = "{"
+                end_fmt = d['end_fmt']
+                fmt = "{" + end_fmt
             if val is not None:
+                val_formatted = val
+                if len(fmt) > 0:
+                    val_formatted = fmt.format(val)
                 coltype = d['col']
                 if len(coltype) == 0:
                     coltype = ":"
-                line = f"{d['pre']}{d['var']}{coltype} {val} {d['post']}"
+                # Note that curval contains the whitespace but is unused
+                if d['inline'] == "!":
+                    # Replace from $...$ with just {val_formatted}
+                    line = f"{d['pre']}{val_formatted}{d['post']}"
+                else:
+                    # Maintain line but rewrite value
+                    line = f"{d['pre']}${ob}{d['var']}{end_fmt}{coltype} {val_formatted} ${d['post']}"
 
         return line
 

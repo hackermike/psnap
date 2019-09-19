@@ -6,6 +6,7 @@ import time
 import random
 from psnap import state_tracker
 
+# Like main example but uses additional formatting
 if __name__ == "__main__":
     # Can use datetime.datetime.strftime formatting for dateformat
     # and reference your dateformat with %D.
@@ -20,12 +21,12 @@ if __name__ == "__main__":
     st.set("val2", "number 2") # $val2$
     # Let's get a random number
     ts = time.time()
-    st.set("timestamp", ts) # Last ran at $timestamp$
+    st.set("timestamp", ts) # Last ran at ${timestamp:0.3f}$
     random.seed(ts)
     random_val = random.randint(1000000, 10000000)
-    st.set("random_val", random_val) # $random_val$
+    st.set("random_val", random_val) # Expand inline $!random_val$
     random_val2 = random.randint(1000000, 10000000)
-    st.set("deep.dotted.path", random_val2) # $deep.dotted.path$
+    st.set("deep.dotted.path", random_val2) # $!{deep.dotted.path:,}$
     # Expect won't be found or expanded $missing.variable$
     json_output = st.save()
     print(f"Saved history to: {json_output}")

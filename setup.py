@@ -18,8 +18,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 setuptools.setup(
      name='psnap',  
-     version='0.5',
-     scripts=['scripts/psnap', 'scripts/psnap_example'] ,
+     version='0.6',
+     scripts=['scripts/psnap', 'scripts/psnap_example', 'scripts/psnap_example2'] ,
      author="Michael Frandsen",
      author_email="wfrandsen@gmail.com",
      description="Snapshot script output to json and expand keywords in source file.",
