@@ -22,6 +22,9 @@ if __name__ == "__main__":
     random.seed(ts)
     random_val = random.random()
     st.set("random_val", random_val) # $random_val$
+    random_val2 = random.random()
+    st.set("deep.dotted.path", random_val2) # $deep.dotted.path$
+    # Expect won't be found or expanded $missing.variable$
     json_output = st.save()
     print(f"Saved history to: {json_output}")
     output = st.save_code_snap(output_directory=".")
