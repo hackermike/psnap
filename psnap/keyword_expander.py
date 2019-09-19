@@ -28,15 +28,9 @@ class KeywordExpander:
 
         data_key = data[meta_key]["data_key"]
 
-        # Or, see dotty dict
-        pieces = str.split(".", 2)
-
-        if len(pieces) >= 1 and len(pieces) <= 2:
-            if pieces[0] in data[data_key]:
-                if len(pieces) == 1:
-                    return data[data_key][pieces[0]]
-                elif len(pieces) == 2:
-                    return data[data_key][pieces[0]][pieces[1]]
+        # data uses dotty_dict so can use any dotted notation directly
+        if str in data[data_key]:
+            return data[data_key][str]
 
         return None
 

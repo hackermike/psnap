@@ -3,6 +3,7 @@ import json
 import os.path
 import sys
 import time
+from dotty_dict import dotty
 from psnap import keyword_expander
 
 class StateTracker:
@@ -57,7 +58,7 @@ class StateTracker:
             dateformat = "%Y%m%d_%H%M%S"
         self._dateformat = dateformat
 
-        self._hist[StateTracker._data_key] = {}
+        self._hist[StateTracker._data_key] = dotty()
         now = time.time()
         time_ts = datetime.datetime.fromtimestamp(now)
         ts_iso = time_ts.isoformat()
@@ -121,7 +122,7 @@ class StateTracker:
     @property
     def data(self):
         """Dictionary containing values that have been set."""
-        return self._hist[self._hist[StateTracker._meta_key]["data_key"]]
+        return self._hist[self._hist[StateTracker._meta_key]["data_key"]].to_dict()
 
     @property
     def code_snap(self):
@@ -150,7 +151,14 @@ class StateTracker:
             # Allow expansion of any special vars
             filename = StateTracker._expand_filename(filename)
         with open(f"{filename}", "w", encoding="utf-8") as f:
-            json.dump(self._hist, f)
+            # dotty_dict isn't json serializable to make object very similar
+            # to _hist.
+            #o = self._hist
+            o = {
+                StateTracker._data_key: self.data,
+                StateTracker._meta_key: self.meta
+            }
+            json.dump(o, f)
         return filename
 
     def save_code_snap(self, output_directory=None):
