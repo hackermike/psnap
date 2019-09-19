@@ -49,8 +49,8 @@ class StateTracker:
             Jupyter notebook, etc.
         code_snap : str, optional
             can specify output name of code snapshot for psnap keyword
-            substitution; defaults to use code_src with "_dateformat"
-            inserted before the file extension
+            substitution; defaults to use code_src in working directory with
+            "_dateformat" inserted before the file extension
         """
 
         self._hist = {}
@@ -69,7 +69,8 @@ class StateTracker:
             # Note: Should pass value as arg for notebook, etc.
             code_src = sys.argv[0]
         if code_snap is None:
-            (code_basename, use_ext) = os.path.splitext(code_src)
+            code_src_basename = os.path.basename(code_src)
+            (code_basename, use_ext) = os.path.splitext(code_src_basename)
             if len(use_ext) == 0:
                 use_ext = ".py"
             code_snap = code_basename + f"_{self.ts_str}" + use_ext
