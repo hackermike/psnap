@@ -1,6 +1,8 @@
-#!/usr/bin/env python3
+#!/Users/frandsen/python-venvs/py3-psnap/bin/python3.6
 
 import sys
+import time
+import random
 from psnap import state_tracker
 
 if __name__ == "__main__":
@@ -14,6 +16,12 @@ if __name__ == "__main__":
     st.set("val1", 1)
     # $val1$
     st.set("val2", "number 2") # $val2$
+    # Let's get a random number
+    ts = time.time()
+    st.set("timestamp", ts) # Last ran at $timestamp$
+    random.seed(ts)
+    random_val = random.random()
+    st.set("random_val", random_val) # $random_val$
     json_output = st.save()
     print(f"Saved history to: {json_output}")
     output = st.save_code_snap(output_directory=".")
