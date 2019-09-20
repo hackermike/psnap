@@ -5,6 +5,7 @@ import os.path
 import sys
 import random
 import time
+import traceback
 from psnap import state_tracker
 
 if __name__ == "__main__":
@@ -63,6 +64,13 @@ if __name__ == "__main__":
     d1 = {"a": "string", "b": 5, "c": 2.7}
     st.set("d1", d1)
     # $d1$
+
+    elapsed_seconds = time.time() - ts
+    # str(timedelta) formats as [H]H:MM:SS[.UUUUUU]
+    # trim last 3 to get milliseconds instead of microseconds
+    time_elapsed = str(datetime.timedelta(seconds=elapsed_seconds))[:-3]
+    st.set("time_elapsed", time_elapsed)
+    # $time_elapsed$
 
     # Save main json state
     try:
