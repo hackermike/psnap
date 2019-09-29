@@ -2,6 +2,7 @@ import json
 import os.path
 import re
 import sys
+from dotty_dict import dotty
 
 class KeywordExpander:
     """
@@ -25,15 +26,15 @@ class KeywordExpander:
     _var_expand_br_re = re.compile(_var_expand_br_str, re.S)
 
     @staticmethod
-    def _lookup_var(str, data):
+    def _lookup_var(s, data):
         from psnap import state_tracker
         meta_key = state_tracker.StateTracker._meta_key
 
         data_key = data[meta_key]["data_key"]
 
         # data uses dotty_dict so can use any dotted notation directly
-        if str in data[data_key]:
-            return data[data_key][str]
+        if s in data[data_key]:
+            return data[data_key][s]
 
         return None
 
@@ -153,5 +154,9 @@ class KeywordExpander:
         """
         with open(sys.argv[1], encoding="utf-8") as f:
             data = json.load(f)
+            from psnap import state_tracker
+            meta_key = state_tracker.StateTracker._meta_key
+            data_key = data[meta_key]["data_key"]
+            data[data_key] = dotty(data[data_key])
 
         return KeywordExpander.expand_from_json(data, output_directory=output_directory)
