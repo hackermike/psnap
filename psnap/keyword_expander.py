@@ -72,10 +72,10 @@ class KeywordExpander:
                 # Note that curval contains the whitespace but is unused
                 if d['inline'] == "!":
                     # Replace from $...$ with just {val_formatted}
-                    line = f"{d['pre']}{val_formatted}{d['post']}"
+                    line = "{}{}{}".format(d['pre'], val_formatted, d['post'])
                 else:
                     # Maintain line but rewrite value
-                    line = f"{d['pre']}${ob}{d['var']}{end_fmt}{coltype} {val_formatted} ${d['post']}"
+                    line = "{}${}{}{}{} {} ${}".format(d['pre'], ob, d['var'], end_fmt, coltype, val_formatted, d['post'])
 
         return line
 
@@ -115,7 +115,7 @@ class KeywordExpander:
         infile_norm = os.path.normpath(infile)
         outfile_norm = os.path.normpath(outfile)
         if infile_norm == outfile_norm:
-            raise RuntimeError(f"Output file must not match input code_src: {infile}")
+            raise RuntimeError("Output file must not match input code_src: {}".format(infile))
 
         # See if output_directory exists or needs to be created
         output_directory = os.path.dirname(outfile)

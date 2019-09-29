@@ -17,13 +17,13 @@ from psnap import keyword_expander
 
 def _psnap_main():
     if len(sys.argv) != 2:
-        print(f"Usage: {sys.argv[0]} infile.json")
+        print("Usage: {} infile.json".format(sys.argv[0]))
         return
 
     data = keyword_expander.KeywordExpander.expand_from_json_file(sys.argv[1])
 
-    print(f"INFILE: {data['code_src']}")
-    print(f"WROTE: {data['code_snap']}")
+    print("INFILE: {}".format(data['code_src']))
+    print("WROTE: {}".format(data['code_snap']))
 
 if __name__ == "__main__":
     _psnap_main()

@@ -73,7 +73,7 @@ class StateTracker:
             (code_basename, use_ext) = os.path.splitext(code_src_basename)
             if len(use_ext) == 0:
                 use_ext = ".py"
-            code_snap = code_basename + f"_{self.ts_str}" + use_ext
+            code_snap = code_basename + "_{}".format(self.ts_str) + use_ext
         self._hist[StateTracker._meta_key] = {
             "code_src": code_src,
             "code_snap": code_snap,
@@ -157,7 +157,7 @@ class StateTracker:
         if len(output_directory) > 0 and not os.path.exists(output_directory):
             os.makedirs(output_directory)
 
-        with open(f"{filename}", "w", encoding="utf-8") as f:
+        with open(filename, "w", encoding="utf-8") as f:
             # dotty_dict isn't json serializable to make object very similar
             # to _hist.
             #o = self._hist
