@@ -1,8 +1,16 @@
+from __future__ import print_function
+
 import json
 import os.path
 import re
 import sys
-from dotty_dict import dotty
+try:
+    from dotty_dict import dotty
+except:
+    dotty = None
+
+if sys.version_info[0] < 3:
+    from io import open
 
 class KeywordExpander:
     """
@@ -126,7 +134,10 @@ class KeywordExpander:
             with open(infile, encoding="utf-8") as fin:
                 for line in fin:
                     line = KeywordExpander._expand_vars(line, data)
-                    fout.write(line)
+                    if sys.version_info[0] > 2:
+                        fout.write(line)
+                    else:
+                        fout.write(line.decode('utf-8'))
 
         result = {
             "code_src": infile,
@@ -154,9 +165,10 @@ class KeywordExpander:
         """
         with open(sys.argv[1], encoding="utf-8") as f:
             data = json.load(f)
-            from psnap import state_tracker
-            meta_key = state_tracker.StateTracker._meta_key
-            data_key = data[meta_key]["data_key"]
-            data[data_key] = dotty(data[data_key])
+            if dotty is not None:
+                from psnap import state_tracker
+                meta_key = state_tracker.StateTracker._meta_key
+                data_key = data[meta_key]["data_key"]
+                data[data_key] = dotty(data[data_key])
 
         return KeywordExpander.expand_from_json(data, output_directory=output_directory)

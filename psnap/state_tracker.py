@@ -1,10 +1,18 @@
+from __future__ import print_function
+
 import datetime
 import json
 import os.path
 import sys
 import time
-from dotty_dict import dotty
+try:
+    from dotty_dict import dotty
+except:
+    dotty = None
 from psnap import keyword_expander
+
+if sys.version_info[0] < 3:
+    from io import open
 
 class StateTracker:
     """
@@ -58,7 +66,10 @@ class StateTracker:
             dateformat = "%Y%m%d_%H%M%S"
         self._dateformat = dateformat
 
-        self._hist[StateTracker._data_key] = dotty()
+        if dotty is None:
+            self._hist[StateTracker._data_key] = dict()
+        else:
+            self._hist[StateTracker._data_key] = dotty()
         now = time.time()
         time_ts = datetime.datetime.fromtimestamp(now)
         ts_iso = time_ts.isoformat()
@@ -123,7 +134,10 @@ class StateTracker:
     @property
     def data(self):
         """Dictionary containing values that have been set."""
-        return self._hist[self._hist[StateTracker._meta_key]["data_key"]].to_dict()
+        if dotty is None:
+            return self._hist[self._hist[StateTracker._meta_key]["data_key"]]
+        else:
+            return self._hist[self._hist[StateTracker._meta_key]["data_key"]].to_dict()
 
     @property
     def code_snap(self):
@@ -165,7 +179,10 @@ class StateTracker:
                 StateTracker._data_key: self.data,
                 StateTracker._meta_key: self.meta
             }
-            json.dump(o, f)
+            if sys.version_info[0] > 2:
+                json.dump(o, f)
+            else:
+                f.write(json.dumps(o).decode('utf-8'))
         return filename
 
     def save_code_snap(self, output_directory=None):

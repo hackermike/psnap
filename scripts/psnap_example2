@@ -1,4 +1,6 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+
+from __future__ import print_function
 
 import datetime
 import os.path
@@ -42,7 +44,11 @@ if __name__ == "__main__":
     ts_ctime = datetime.datetime.fromtimestamp(ts).ctime()
     st.set("time_ctime", ts_ctime) # Time in ctime format $!time_ctime$
 
-    ts_iso = datetime.datetime.fromtimestamp(ts, datetime.timezone.utc).isoformat()
+    if sys.version_info[0] > 2:
+        ts_iso = datetime.datetime.fromtimestamp(ts, datetime.timezone.utc).isoformat()
+    else:
+        # Python 2
+        ts_iso = datetime.datetime.fromtimestamp(ts).isoformat()
     st.set("time_iso", ts_iso) # iso time $!time_iso$
 
     # Let's get a random number (seeded with our time above)
