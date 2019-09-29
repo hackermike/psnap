@@ -25,7 +25,7 @@ with open("README.md", "r") as fh:
         raise Exception("Must be using Python 2.7+ or 3.5+")
 setuptools.setup(
      name='psnap',  
-     version='0.7.1',
+     version='0.7.2',
      scripts=['scripts/psnap', 'scripts/psnap_example', 'scripts/psnap_example2'] ,
      author="Michael Frandsen",
      author_email="wfrandsen@gmail.com",
@@ -37,6 +37,12 @@ setuptools.setup(
      install_requires=install_requires,
      classifiers=[
          "Programming Language :: Python :: 2",
+         "Programming Language :: Python :: 3",
+         "Programming Language :: Python :: 2.7",
+         "Programming Language :: Python :: 3.5",
+         "Programming Language :: Python :: 3.6",
+         "Programming Language :: Python :: 3.7",
+         "Programming Language :: Python :: 3.8",
          "License :: OSI Approved :: MIT License",
          "Operating System :: OS Independent",
      ],
